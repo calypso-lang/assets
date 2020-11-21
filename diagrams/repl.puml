@@ -1,0 +1,46 @@
+@startuml repl
+skinparam maxMessageSize 125
+
+actor       Usr as "User Interaction Thread"
+control     Ctl as "Control Thread"
+participant Evl as "Evaluation Thread"
+participant Cmd as "Command Thread"
+
+title 
+  Threads may just be ""async"" functions on the Tokio runtime,
+  depending on how I decide to implement it
+end title
+
+
+== Regular Input Handling ==
+
+autonumber
+' User input, non-command
+Usr -> Ctl : User input, not a command
+Ctl -> Evl : Condvar wakeup: Evaluate request
+
+Evl -> Ctl : Spurious response (e.g. println)
+Ctl -> Usr : Handle value
+Usr -> Ctl : Success
+
+Evl -> Ctl : Return
+Ctl -> Usr : Handle value
+Usr -> Ctl : Success
+Ctl -> Evl : Condvar sleep
+
+== Command Handling ==
+
+autonumber
+' User input, command
+Usr -> Ctl : User input, is a command
+Ctl -> Cmd : Condvar wakeup: Evaluate command
+
+Cmd -> Ctl : Spurious response (e.g. change REPL settings)
+Ctl -> Cmd : Success
+
+Cmd -> Ctl : Return
+Ctl -> Usr : Handle value
+Usr -> Ctl : Success
+Ctl -> Cmd : Condvar sleep
+
+@enduml
