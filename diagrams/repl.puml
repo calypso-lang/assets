@@ -12,14 +12,12 @@ actor Cmd2 as "Cmd Evaluator 2"
 autonumber
 User -> Ctrl : ""Load("<INPUT>")""
 Ctrl -> Eval : ""Evaluate("<INPUT>")""
-Eval -> Ctrl : ""Print("<OUTPUT>")""
 
 == Command Handling ==
 
 autonumber
 User -> Ctrl : ""Load(":cmd1 <INPUT>")""
 Ctrl -> Cmd1 : ""Evaluate(":cmd1 <INPUT>")""
-Cmd1 -> Ctrl : ""Print("<OUTPUT>")""
 
 == Command Handling with Config ==
 
@@ -30,6 +28,5 @@ Cmd2 -> Ctrl : ""GetConfigMut""
 Ctrl -> User : ""GetConfigMut""
 User -> Ctrl : ""ConfigMut(&mut Config)""
 Ctrl -> Cmd2 : ""ConfigMut(&mut Config)""
-Cmd2 -> Ctrl : ""Print("<OUTPUT>")""
 
 @enduml
